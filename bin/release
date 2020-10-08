@@ -1,0 +1,8 @@
+#!/bin/sh
+BUILD_DIR=${1:-}
+
+cat << EOF
+---
+default_process_types:
+  db: $BUILD_DIR/mongodb/bin/mongod --dbpath $BUILD_DIR/db/mongodb
+EOF
