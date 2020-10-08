@@ -11,6 +11,12 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
+# We only want to install MongoDB for testing
+if [ "$(cat $ENV_DIR/RAILS_ENV)" != "test" ]; then
+  echo "-----> TEST environment not detected, exiting"
+  exit 0
+fi
+
 APP_DIR="${BUILD_DIR}/mongodb/"
 APP_CACHE="${CACHE_DIR}/mongodb/"
 
@@ -20,7 +26,7 @@ VERSION="3.0.15"
 FILENAME="mongodb-${OS}-${ARCH}-${VERSION}"
 
 
-echo "------> Creating environment"
+echo "-----> Creating MongoDB environment"
 
 cd $BUILD_DIR
 mkdir -p "$APP_DIR"
@@ -29,13 +35,13 @@ mkdir -p "${BUILD_DIR}/.profile.d"
 mkdir -p "${BUILD_DIR}/db/mongodb"
 
 
-echo "------> Downloading ${FILENAME}.tgz"
+echo "-----> Downloading ${FILENAME}.tgz"
 
 cd $APP_CACHE
 curl -Os https://fastdl.mongodb.org/${OS}/${FILENAME}.tgz && tar -zxvf ${FILENAME}.tgz
 
 
-echo "------> Installing MongoDB"
+echo "-----> Installing MongoDB"
 
 cd $BUILD_DIR
 cp -R -n $APP_CACHE/$FILENAME/* $APP_DIR
