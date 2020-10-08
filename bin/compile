@@ -6,6 +6,10 @@ set -o pipefail   # don't ignore exit codes when piping output
 set -o posix      # more strict failures in subshells
 # set -x          # enable debugging
 
+indent() {
+  sed -u 's/^/       /'
+}
+
 ### Configure directories
 BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
@@ -38,12 +42,12 @@ mkdir -p "${BUILD_DIR}/db/mongodb"
 echo "-----> Downloading ${FILENAME}.tgz"
 
 cd $APP_CACHE
-curl -Os https://fastdl.mongodb.org/${OS}/${FILENAME}.tgz && tar -zxvf ${FILENAME}.tgz
+curl -Os https://fastdl.mongodb.org/${OS}/${FILENAME}.tgz && tar -zxvf ${FILENAME}.tgz | indent
 
 
 echo "-----> Installing MongoDB"
 
 cd $BUILD_DIR
-cp -R -n $APP_CACHE/$FILENAME/* $APP_DIR
+cp -R -n $APP_CACHE/$FILENAME/* $APP_DIR | indent
 
 echo "export PATH=\"\$HOME/mongodb/bin:\$PATH\"" > "${BUILD_DIR}/.profile.d/mongo.sh"
